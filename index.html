@@ -4,48 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Korean Learning Metaverse</title>
-    <!-- Tailwind CSS (스타일링 용도) -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome (아이콘 용도) -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-gray-200 flex justify-center items-center min-h-screen p-4 font-sans">
     
-    <!-- 모바일/태블릿 화면 비율의 메인 컨테이너 -->
     <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden flex flex-col h-[850px]">
-
         <!-- 상단 헤더 영역 -->
         <div class="p-6 bg-white border-b border-gray-100">
             <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Korean Learning Metaverse</p>
             <h1 class="text-3xl font-extrabold text-gray-900 leading-tight">Virtual Seongsu-dong<br>Korean Tour</h1>
             <p class="text-sm text-gray-500 mt-1">가상 성수동 한국어 투어</p>
             <p class="text-sm text-emerald-500 font-semibold mt-3 flex items-center">
-                <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full mr-2 animate-pulse"></span>3 shops online now
+                <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full mr-2 animate-pulse"></span>
+                3 shops online now
             </p>
         </div>
 
         <!-- 가상 맵 및 상점 선택 영역 -->
         <div class="relative bg-[#f8f5ee] h-56 w-full flex items-center justify-center border-b border-gray-200">
-            <!-- 배경 패턴이나 이미지가 들어갈 자리 (현재는 텍스트로 대체) -->
-            <div class="text-center z-10">
+            <div class="text-center z-10 w-full px-4">
                 <p class="text-gray-600 font-medium text-sm mb-4">📍 Seongsu-dong · 성수동</p>
-                <div class="flex flex-col space-y-3 items-center">
-                    <span class="bg-white px-4 py-2 rounded-full text-sm font-medium shadow-sm cursor-pointer hover:bg-gray-50 transition">☕ 성수 카페 Seongsu Cafe</span>
-                    <span class="bg-blue-50 px-4 py-2 rounded-full text-sm font-bold shadow-sm border-2 border-blue-200 text-blue-700 cursor-pointer">🍲 서울 맛집 Seoul Restaurant</span>
-                    <span class="bg-white px-4 py-2 rounded-full text-sm font-medium shadow-sm cursor-pointer hover:bg-gray-50 transition">🛍️ 한국 상점 K-Shop</span>
+                <div class="flex flex-col space-y-3 items-center w-full" id="shop-container">
+                    <button onclick="selectShop(this, '성수 카페', '☕ 성수 카페에서 커피를 주문해 보세요!')" class="shop-btn bg-white px-4 py-2 rounded-full text-sm font-medium shadow-sm hover:bg-gray-50 transition w-3/4">☕ 성수 카페 Seongsu Cafe</button>
+                    <button onclick="selectShop(this, '서울 맛집', '🍲 어서 오세요! 서울 맛집입니다. 무엇을 주문하시겠어요?')" class="shop-btn bg-blue-50 px-4 py-2 rounded-full text-sm font-bold shadow-sm border-2 border-blue-200 text-blue-700 w-3/4 active-shop">🍲 서울 맛집 Seoul Restaurant</button>
+                    <button onclick="selectShop(this, '한국 상점', '🛍️ 한국 상점에 오신 것을 환영합니다! 도와드릴까요?')" class="shop-btn bg-white px-4 py-2 rounded-full text-sm font-medium shadow-sm hover:bg-gray-50 transition w-3/4">🛍️ 한국 상점 K-Shop</button>
                 </div>
             </div>
         </div>
 
         <!-- 채팅 영역 -->
-        <div class="flex-1 overflow-y-auto p-5 bg-gray-50 flex flex-col">
+        <div class="flex-1 overflow-y-auto p-5 bg-gray-50 flex flex-col" id="chat-box">
             <div class="text-center text-xs font-medium text-gray-400 my-4 bg-gray-200/50 py-2 rounded-full mx-auto px-4">
                 Tap a storefront sign to start a Korean conversation ✨
             </div>
 
-            <!-- AI 튜터 메시지 -->
+            <!-- AI 튜터 첫 메시지 -->
             <div class="flex items-start mt-4">
-                <!-- 아바타 -->
                 <div class="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center mr-3 flex-shrink-0 border border-orange-200">
                     <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Mina" alt="미나 아바타" class="w-10 h-10 rounded-full">
                 </div>
@@ -53,42 +50,95 @@
                     <div class="flex items-center mb-1">
                         <span class="font-bold text-sm text-gray-900 mr-2">미나 · AI Korean Tutor</span>
                     </div>
-                    <div class="text-xs font-medium text-gray-500 mb-2 flex items-center">
+                    <div class="text-xs font-medium text-gray-500 mb-2 flex items-center" id="chat-shop-title">
                         🍲 서울 맛집 · Seoul Restaurant
                     </div>
-                    <!-- 말풍선 -->
                     <div class="bg-white p-4 rounded-2xl rounded-tl-none shadow-sm border border-gray-100 max-w-[95%]">
-                        <p class="text-gray-800 text-sm font-medium mb-3 leading-relaxed">어서 오세요! '서울 맛집'입니다. 오늘은 어떤 음식을 드시고 싶으세요?</p>
-                        <p class="text-gray-400 text-xs italic leading-relaxed">Welcome! This is 'Seoul Restaurant'. What kind of food would you like to eat today?</p>
+                        <p class="text-gray-800 text-sm font-medium mb-3 leading-relaxed" id="tutor-greeting">
+                            어서 오세요! '서울 맛집'입니다. 오늘은 어떤 음식을 드시고 싶으세요?
+                        </p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 하단 입력 및 추천 버튼 영역 -->
-        <div class="p-4 bg-white border-t border-gray-100">
-            <!-- 추천 답변 (칩 형태) -->
-            <div class="flex flex-wrap gap-2 mb-4">
-                <button class="bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 px-4 py-2 rounded-2xl text-sm font-medium transition-colors shadow-sm">
+        <!-- 입력 영역 -->
+        <div class="bg-white border-t border-gray-200 p-4">
+            <!-- 추천 답변 칩 -->
+            <div class="flex space-x-2 overflow-x-auto pb-3 scrollbar-hide">
+                <button onclick="fillInput('비빔밥 하나 주세요')" class="whitespace-nowrap bg-gray-100 hover:bg-blue-50 hover:text-blue-600 text-gray-700 px-3 py-1.5 rounded-full text-sm font-medium transition">
                     비빔밥 하나 주세요
                 </button>
-                <button class="bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 px-4 py-2 rounded-2xl text-sm font-medium transition-colors shadow-sm">
+                <button onclick="fillInput('매운 음식 있어요?')" class="whitespace-nowrap bg-gray-100 hover:bg-blue-50 hover:text-blue-600 text-gray-700 px-3 py-1.5 rounded-full text-sm font-medium transition">
                     매운 음식 있어요?
                 </button>
-                <button class="bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 px-4 py-2 rounded-2xl text-sm font-medium transition-colors shadow-sm">
+                <button onclick="fillInput('자리 있어요?')" class="whitespace-nowrap bg-gray-100 hover:bg-blue-50 hover:text-blue-600 text-gray-700 px-3 py-1.5 rounded-full text-sm font-medium transition">
                     자리 있어요?
                 </button>
             </div>
             
-            <!-- 입력창 -->
+            <!-- 채팅 입력창 -->
             <div class="relative flex items-center">
-                <input type="text" placeholder="한국어로 답해 보세요..." class="w-full bg-gray-100 border-transparent rounded-full py-4 px-6 pr-14 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all text-sm font-medium placeholder-gray-400">
-                <button class="absolute right-2 w-10 h-10 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors">
-                    <i class="fa-solid fa-arrow-up"></i>
+                <input type="text" id="chat-input" placeholder="한국어로 대답해 보세요..." class="w-full bg-gray-100 border-transparent focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 rounded-full py-3 pl-5 pr-12 text-sm transition outline-none" onkeypress="handleKeyPress(event)">
+                <button onclick="sendMessage()" class="absolute right-2 top-1/2 transform -translate-y-1/2 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700 transition shadow-sm">
+                    <i class="fas fa-arrow-up text-sm"></i>
                 </button>
             </div>
         </div>
     </div>
 
+    <!-- 인터랙션을 위한 자바스크립트 -->
+    <script>
+        // 상점 선택 시 스타일 및 채팅 인사말 변경
+        function selectShop(element, shopName, greeting) {
+            // 모든 버튼 초기화
+            document.querySelectorAll('.shop-btn').forEach(btn => {
+                btn.className = "shop-btn bg-white px-4 py-2 rounded-full text-sm font-medium shadow-sm hover:bg-gray-50 transition w-3/4";
+            });
+            // 선택된 버튼 하이라이트
+            element.className = "shop-btn bg-blue-50 px-4 py-2 rounded-full text-sm font-bold shadow-sm border-2 border-blue-200 text-blue-700 w-3/4 active-shop";
+            
+            // 채팅방 정보 업데이트
+            document.getElementById('chat-shop-title').innerText = shopName;
+            document.getElementById('tutor-greeting').innerText = greeting;
+        }
+
+        // 추천 칩 클릭 시 입력창에 텍스트 채우기
+        function fillInput(text) {
+            const input = document.getElementById('chat-input');
+            input.value = text;
+            input.focus();
+        }
+
+        // 엔터키 입력 감지
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        // 메시지 전송 기능
+        function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const chatBox = document.getElementById('chat-box');
+            
+            // 사용자 메시지 말풍선 HTML 추가
+            const userMsgHTML = `
+                <div class="flex items-start justify-end mt-4">
+                    <div class="bg-blue-600 text-white p-3 px-5 rounded-2xl rounded-tr-none shadow-sm max-w-[80%] text-sm font-medium">
+                        ${text}
+                    </div>
+                </div>
+            `;
+            chatBox.insertAdjacentHTML('beforeend', userMsgHTML);
+            
+            // 입력창 비우고 스크롤 맨 아래로 내리기
+            input.value = '';
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    </script>
 </body>
 </html>
