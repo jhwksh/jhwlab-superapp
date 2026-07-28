@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JHW LAB - 3D 가상 상권 한국어 슈퍼앱</title>
-    <script src="https://jsdelivr.net"></script>
-    <!-- 전세계 표준 3D 그래픽 엔진 Three.js 라이브러리 탑재 -->
-    <script src="https://cloudflare.com"></script>
+  <!-- Tailwind CSS (디자인용) -->
+<script src="https://cdn.tailwindcss.com"></script>
+<!-- Three.js (3D 그래픽 엔진) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         @import url('https://googleapis.com');
         body { font-family: 'Pretendard', sans-serif; background-color: #0b111e; color: #f3f4f6; }
@@ -24,6 +25,7 @@
                 <span class="text-[10px] font-bold text-indigo-400 tracking-wider block uppercase">JHW LAB REAL 3D ENGINE</span>
                 <h1 class="text-base font-black text-white">성수동 가상 3D 공간데모</h1>
             </div>
+                <div class="control-container">
             <select id="globalLang" onchange="changeTutorLang()" class="bg-[#334155] text-xs text-white rounded-lg px-2 py-1 outline-none cursor-pointer border-none font-bold">
                 <option value="en">🇺🇸 English Tutor</option>
                 <option value="zh">🇨🇳 中文 导师</option>
