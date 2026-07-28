@@ -1,215 +1,189 @@
-
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JHW LAB - 3D 가상 상권 한국어 슈퍼앱</title>
-  <!-- Tailwind CSS (디자인용) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Three.js (3D 그래픽 엔진) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <style>
-   
-    body {
-      font-family: 'Pretendard', sans-serif;
-      background-color: #0b111e;
-      color: #f3f4f6;
-    }
-    canvas {
-      display: block;
-      width: 100%;
-      height: 100%;
-      outline: none;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K-Language Meta Village (성수동 메타동네)</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { display: flex; height: 100vh; background: #f4f6f8; overflow: hidden; }
+        
+        /* 1. 좌측/상단: 글로벌 언어 선택 바 */
+        .top-bar { position: absolute; top: 16px; left: 20px; z-index: 10; background: rgba(255, 255, 255, 0.95); padding: 8px 16px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 8px; }
+        .lang-select { border: none; font-size: 14px; font-weight: bold; background: transparent; cursor: pointer; outline: none; }
+
+        /* 2. 중앙: 성수동 일러스트 지도 */
+        .map-section { flex: 1; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #e5ecef; }
+        .map-container { position: relative; width: 90%; max-width: 680px; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.12); }
+        .map-img { width: 100%; display: block; }
+
+        /* 지도 위 상점 핀 */
+        .shop-pin { position: absolute; padding: 10px 16px; background: #ffffff; border-radius: 24px; font-weight: bold; font-size: 13px; box-shadow: 0 4px 15px rgba(0,0,0,0.18); cursor: pointer; border: 2px solid #ff6b6b; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px; }
+        .shop-pin:hover { transform: translateY(-3px) scale(1.05); background: #fff5f5; border-color: #ee5253; }
+        
+        .pin-cafe { top: 48%; left: 32%; }
+        .pin-food { top: 28%; left: 52%; }
+        .pin-shop { top: 68%; left: 48%; }
+
+        /* 3. 우측: AI 대화 & 다국어 튜터 */
+        .chat-section { width: 380px; background: #ffffff; border-left: 1px solid #e1e4e8; display: flex; flex-direction: column; padding: 20px; }
+        .tutor-header { display: flex; align-items: center; gap: 12px; padding-bottom: 15px; border-bottom: 1px solid #f0f0f0; margin-bottom: 15px; }
+        .tutor-avatar { width: 44px; height: 44px; border-radius: 50%; background: #ffeaa7; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+        
+        .chat-history { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px; padding-right: 4px; }
+        .msg { padding: 10px 14px; border-radius: 12px; font-size: 13px; line-height: 1.5; max-width: 88%; }
+        .msg-ai { background: #f0f4ff; color: #1e293b; align-self: flex-start; }
+        .msg-ai span { display: block; font-size: 11px; color: #64748b; margin-top: 4px; border-top: 1px dashed #cbd5e1; padding-top: 4px; }
+        .msg-user { background: #4f46e5; color: #ffffff; align-self: flex-end; }
+
+        .quick-replies { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+        .chip { padding: 8px 12px; background: #f1f5f9; border-radius: 18px; font-size: 12px; cursor: pointer; border: 1px solid #e2e8f0; font-weight: 500; transition: 0.2s; }
+        .chip:hover { background: #e2e8f0; }
+
+        /* 비즈니스 모델: 오답 교재 자동 생성 */
+        .textbook-card { background: #fff8f0; border: 1px solid #fed7aa; border-radius: 10px; padding: 12px; margin-top: 8px; font-size: 12px; }
+        .pay-btn { margin-top: auto; padding: 14px; background: #10b981; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; text-align: center; font-size: 14px; transition: 0.2s; }
+        .pay-btn:hover { background: #059669; }
+    </style>
 </head>
-<body class="flex justify-center items-center min-h-screen p-4">
+<body>
 
-  <!-- 스마트폰 목업 프레임 -->
-  <div class="w-full max-w-md bg-[#0f172a] rounded-[40px] shadow-2xl border-8 border-[#334155] overflow-hidden flex flex-col h-[840px] relative">
-    
-    <!-- 상단 내비게이션 -->
-    <div class="bg-[#1e293b] p-4 pt-6 border-b border-[#334155] flex justify-between items-center z-10 shadow-md">
-      <div>
-        <span class="text-[10px] font-bold text-indigo-400 tracking-wider block uppercase">JHW LAB REAL 3D ENGINE</span>
-        <h1 class="text-base font-black text-white">성수동 가상 3D 공간데모</h1>
-      </div>
-      <div class="control-container">
-        <select id="globalLang" onchange="changeTutorLang()" class="bg-[#334155] text-xs text-white rounded-lg px-2 py-1 outline-none cursor-pointer border-none font-bold">
-          <option value="en">🇺🇸 English Tutor</option>
-          <option value="zh">🇨🇳 中文 导师</option>
-          <option value="ja">🇯🇵 日本語 講師</option>
+    <!-- 글로벌 다국어 선택 -->
+    <div class="top-bar">
+        <span>🌐 Global Native Language:</span>
+        <select class="lang-select" id="user-lang" onchange="changeLanguage()">
+            <option value="en">🇺🇸 English</option>
+            <option value="zh">🇨🇳 中文 (Chinese)</option>
+            <option value="ja">🇯🇵 日本語 (Japanese)</option>
+            <option value="es">🇪🇸 Español (Spanish)</option>
+            <option value="vi">🇻🇳 Tiếng Việt (Vietnamese)</option>
+            <option value="th">🇹🇭 ภาษาไทย (Thai)</option>
         </select>
-      </div>
     </div>
 
-    <!-- 메인 콘텐츠 영역 -->
-    <div class="flex-1 flex flex-col overflow-hidden relative">
-      <!-- 3D 메타버스 렌더링 캔버스 -->
-      <div class="h-[45%] relative bg-[#090d16] border-b border-[#222e45]" id="canvasContainer">
-        <div class="absolute top-3 left-3 z-10 flex space-x-1.5">
-          <button onclick="select3DObject('onion')" class="bg-amber-600/90 hover:bg-amber-500 text-white text-[10px] font-bold px-2 py-1 rounded-full shadow">📍 어니언 성수</button>
-          <button onclick="select3DObject('fashion')" class="bg-purple-600/90 hover:bg-purple-500 text-white text-[10px] font-bold px-2 py-1 rounded-full shadow">📍 성수 패션</button>
+    <!-- 중앙: 성수동 메타동네 지도 -->
+    <div class="map-section">
+        <div class="map-container">
+            <!-- 지도 이미지 -->
+            <img src="https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?w=800" class="map-img" alt="성수동 메타동네">
+            
+            <button class="shop-pin pin-cafe" onclick="selectShop('cafe')">☕ 성수 카페 <span>Seongsu Cafe</span></button>
+            <button class="shop-pin pin-food" onclick="selectShop('food')">🍲 서울 맛집 <span>Seoul Restaurant</span></button>
+            <button class="shop-pin pin-shop" onclick="selectShop('shop')">🛍️ 한국 상점 <span>K-Shop</span></button>
         </div>
-        <span class="absolute bottom-3 left-3 text-[10px] text-indigo-300 bg-indigo-950/80 border border-indigo-500/30 px-2 py-0.5 rounded-full font-medium z-10 pointer-events-none">
-          💡 상단 버튼을 누르면 3D 모형 색상과 AI 가이드가 변경됩니다!
-        </span>
-      </div>
-
-      <!-- AI 다국어 튜터 대화창 -->
-      <div class="h-[55%] flex flex-col bg-[#111827] p-4 space-y-3 overflow-y-auto">
-        <div class="flex items-center space-x-2 border-b border-[#1e293b] pb-2">
-          <div class="w-8 h-8 rounded-full bg-gradient-to-r from-indigo-500 to-emerald-500 flex justify-center items-center font-bold text-white text-xs shadow-md">AI</div>
-          <div>
-            <h3 class="text-xs font-bold text-white" id="tutorName">AI Tutor Minu (English Guide)</h3>
-            <p class="text-[10px] text-emerald-400 font-medium">● Context Aware AI Connected</p>
-          </div>
-        </div>
-
-        <div class="bg-[#1e293b] rounded-2xl p-4 border border-indigo-500/20 shadow-inner">
-          <p class="text-[11px] text-indigo-400 font-bold mb-1" id="currentLocation">📍 건물을 선택하기 전입니다.</p>
-          <p class="text-sm font-bold text-slate-200 leading-relaxed" id="tutorSpeech">"안녕하세요! 성수동 가상 3D 공간에 오신 것을 환영합니다! 상단 건물 버튼을 눌러 실전 다국어 학습을 시작해 보세요!"</p>
-          
-          <div id="hintPanel" class="hidden mt-3 bg-[#0f172a] p-3 rounded-xl space-y-1.5 text-xs border border-slate-800 shadow-md">
-            <p class="text-amber-400 font-semibold" id="hintTrans">💡 Translation Guide</p>
-            <p class="text-slate-400 font-medium" id="hintPron">🔊 Pronunciation Guide</p>
-          </div>
-        </div>
-
-        <div id="extraActions" class="hidden space-y-2">
-          <div class="bg-gradient-to-r from-emerald-950 to-[#111827] p-2.5 rounded-xl border border-emerald-500/20 flex justify-between items-center shadow-sm">
-            <span class="text-[11px] text-slate-300 font-medium">🛍️ 실제 소상공인 매장 상품 선결제</span>
-            <button onclick="alert('Pre-order completed!')" class="bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-bold px-2.5 py-1.5 rounded-lg">Pre-Order</button>
-          </div>
-          <div class="bg-gradient-to-r from-amber-950 to-[#111827] p-2.5 rounded-xl border border-amber-500/20 flex justify-between items-center shadow-sm">
-            <span class="text-[11px] text-slate-300 font-medium">🎨 원데이 골목 공방 클래스 예약</span>
-            <button onclick="alert('Tour reserved!')" class="bg-amber-500 hover:bg-amber-400 text-gray-900 text-[10px] font-black px-2.5 py-1.5 rounded-lg">Book Pass</button>
-          </div>
-        </div>
-      </div>
     </div>
 
-    <!-- 하단 오답 교재 대시보드 -->
-    <div class="bg-[#1e293b] border-t border-[#334155] p-3 flex justify-between items-center px-5 z-10 shadow-2xl">
-      <div class="flex flex-col">
-        <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Dynamic Custom Textbook</span>
-        <span id="logCounter" class="text-xs font-black text-indigo-400">0 Context Logs Saved</span>
-      </div>
-      <button class="bg-indigo-600 text-white text-xs font-bold px-4 py-2 rounded-xl opacity-50 cursor-not-allowed">
-        Mint Book ($19.99)
-      </button>
+    <!-- 우측: AI 한국어 튜터 & 다국어 지원 -->
+    <div class="chat-section">
+        <div class="tutor-header">
+            <div class="tutor-avatar">👩‍🏫</div>
+            <div>
+                <h3 id="tutor-name">미나 (AI Korean Tutor)</h3>
+                <p id="shop-status" style="font-size: 12px; color: #64748b;">지도의 상점을 선택해 주세요</p>
+            </div>
+        </div>
+
+        <!-- 실시간 대화창 -->
+        <div class="chat-history" id="chat-box">
+            <div class="msg msg-ai">
+                안녕하세요! 지도의 상점 핀을 클릭하시면 다국어 가이드와 함께 실전 한국어 대화가 시작됩니다.
+                <span id="welcome-sub">Click a shop pin to start practicing Korean with your native language guide!</span>
+            </div>
+        </div>
+
+        <!-- 추천 응답 옵션 -->
+        <div class="quick-replies" id="quick-buttons"></div>
+
+        <!-- 수익 모델: 나만의 오답 노트 교재 -->
+        <h4>📘 My Only Textbook (오답 교재)</h4>
+        <div class="textbook-card">
+            <strong>오답 자동 감지:</strong> "소금빵 주세요"
+            <div style="color: #d97706; margin-top: 4px;">➔ 교정: "소금빵 <u>한 개</u> 주세요" (수량 표현 추가)</div>
+        </div>
+
+        <button class="pay-btn" onclick="alert('사업계획서 PT용: 전 세계 결제 연동(Stripe/PayPal) 시뮬레이션입니다.')">
+            💳 맞춤 교재 생성 및 결제 (₩4,900)
+        </button>
     </div>
-  </div>
 
-  <script>
-    let scene, camera, renderer, onionCube, fashionCube;
-    let currentSelection = '';
+    <script>
+        // 전 세계 다국어 번역 힌트 데이터
+        const translations = {
+            en: { welcome: "Welcome! What kind of food would you like today?", cafe: "Welcome to Seongsu Cafe! What drink can I get you?", food: "Welcome to Seoul Restaurant!", sub: "English guide enabled" },
+            zh: { welcome: "欢迎！今天想吃点什么呢？", cafe: "欢迎光临圣水咖啡馆！需要什么饮料？", food: "欢迎光临首尔美食店！", sub: "中文 导师已激活" },
+            ja: { welcome: "いらっしゃいませ！今日は何を食べたいですか？", cafe: "圣水カフェへようこそ！お飲み物はいかがですか？", food: "ソウルグルメへようこそ！", sub: "日本語 ガイド有効" },
+            es: { welcome: "¡Bienvenido! ¿Qué te gustaría comer hoy?", cafe: "¡Bienvenido a Seongsu Cafe!", food: "¡Bienvenido a Seoul Restaurant!", sub: "Guía en español activada" },
+            vi: { welcome: "Chào mừng! Hôm nay bạn muốn ăn gì?", cafe: "Chào mừng đến với Seongsu Cafe!", food: "Chào mừng đến với Seoul Restaurant!", sub: "Hướng dẫn tiếng Việt" },
+            th: { welcome: "ยินดีต้อนรับ! วันนี้คุณอยากทานอะไรดีครับ?", cafe: "ยินดีต้อนรับสู่ Seongsu Cafe!", food: "ยินดีต้อนรับสู่ Seoul Restaurant!", sub: "เปิดใช้งานคำแนะนำภาษาไทย" }
+        };
 
-    const database = {
-      onion: {
-        location: "📍 Location: 어니언 성수 카페 (Onion Cafe)",
-        en: { speech: '"아메리카노 한 잔하고 소금빵 주세요."', trans: "💡 Meaning: One Americano and a salt bread, please.", pron: "🔊 Pronunciation: A-me-ri-ca-no han jan-ha-go so-geum-ppang ju-se-yo." },
-        zh: { speech: '"아메리카노 한 잔하고 소금빵 주세요."', trans: "💡 含义: 请给我一杯美式咖啡和一个盐面包。", pron: "🔊 发音: A-me-ri-ca-no han jan-ha-go so-geum-ppang ju-se-yo." },
-        ja: { speech: '"아메리카노 한 잔하고 소금빵 주세요."', trans: "💡 意味: アメリカーノ을1杯と塩パン을ください。", pron: "🔊 発音: A-me-ri-ca-no han jan-ha-go so-geum-ppang ju-se-yo." }
-      },
-      fashion: {
-        location: "📍 Location: 성수 로컬 편집숍 (Fashion Shop)",
-        en: { speech: '"이거 다른 사이즈도 있어요?"', trans: "💡 Meaning: Do you have this in another size?", pron: "🔊 Pronunciation: I-geo da-reun sa-i-zeu-do it-seo-yo?" },
-        zh: { speech: '"이거 다른 사이즈도 있어요?"', trans: "💡 含义: 这个衣服有其他的尺码吗？", pron: "🔊 发音: I-geo da-reun sa-i-zeu-do it-seo-yo?" },
-        ja: { speech: '"이거 다른 사이즈도 있어요?"', trans: "💡 意味: これ、他のサイズもありますか？", pron: "🔊 発音: I-geo da-reun sa-i-zeu-do it-seo-yo?" }
-      }
-    };
+        let currentLang = 'en';
 
-    function init3D() {
-      const container = document.getElementById('canvasContainer');
-      scene = new THREE.Scene();
-      scene.background = new THREE.Color(0x090d16);
+        function changeLanguage() {
+            currentLang = document.getElementById('user-lang').value;
+            const subText = document.getElementById('welcome-sub');
+            if (subText) subText.innerText = translations[currentLang].sub;
+        }
 
-      camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
-      camera.position.set(5, 5, 8);
-      camera.lookAt(0, 0, 0);
+        function selectShop(type) {
+            const chatBox = document.getElementById('chat-box');
+            const quickButtons = document.getElementById('quick-buttons');
+            const shopStatus = document.getElementById('shop-status');
 
-      renderer = new THREE.WebGLRenderer({ antialias: true });
-      renderer.setSize(container.clientWidth, container.clientHeight);
-      container.appendChild(renderer.domElement);
+            if (type === 'food') {
+                shopStatus.innerText = '🍲 서울 맛집 (Seoul Restaurant)';
+                chatBox.innerHTML = `
+                    <div class="msg msg-ai">
+                        어서 오세요! '서울 맛집'입니다. 오늘은 어떤 음식을 드시고 싶으세요?
+                        <span>${translations[currentLang].welcome}</span>
+                    </div>
+                `;
+                quickButtons.innerHTML = `
+                    <div class="chip" onclick="sendMsg('비빔밥 하나 주세요')">비빔밥 하나 주세요</div>
+                    <div class="chip" onclick="sendMsg('매운 음식 있어요?')">매운 음식 있어요?</div>
+                    <div class="chip" onclick="sendMsg('자리 있어요?')">자리 있어요?</div>
+                `;
+            } else if (type === 'cafe') {
+                shopStatus.innerText = '☕ 성수 카페 (Seongsu Cafe)';
+                chatBox.innerHTML = `
+                    <div class="msg msg-ai">
+                        어서 오세요! '성수 카페'입니다. 어떤 음료로 준비해 드릴까요?
+                        <span>${translations[currentLang].cafe}</span>
+                    </div>
+                `;
+                quickButtons.innerHTML = `
+                    <div class="chip" onclick="sendMsg('아이스 아메리카노 한 잔 주세요')">아메리카노 한 잔 주세요</div>
+                    <div class="chip" onclick="sendMsg('소금빵 얼마예요?')">소금빵 얼마예요?</div>
+                `;
+            } else {
+                shopStatus.innerText = '🛍️ 한국 상점 (K-Shop)';
+                chatBox.innerHTML = `
+                    <div class="msg msg-ai">
+                        반갑습니다! '한국 상점'입니다. 찾으시는 물건이 있으신가요?
+                        <span>Welcome to K-Shop! How can I help you?</span>
+                    </div>
+                `;
+                quickButtons.innerHTML = `
+                    <div class="chip" onclick="sendMsg('기념품 추천해 주세요')">기념품 추천해 주세요</div>
+                    <div class="chip" onclick="sendMsg('조금만 깎아주세요!')">조금만 깎아주세요!</div>
+                `;
+            }
+        }
 
-      const gridHelper = new THREE.GridHelper(10, 20, 0x4f46e5, 0x1e293b);
-      gridHelper.position.y = -0.5;
-      scene.add(gridHelper);
-
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
-      scene.add(ambientLight);
-
-      const directionalLight = new THREE.DirectionalLight(0xffffff, 0.6);
-      directionalLight.position.set(5, 10, 7);
-      scene.add(directionalLight);
-
-      const geo1 = new THREE.BoxGeometry(1.2, 2, 1.2);
-      const mat1 = new THREE.MeshStandardMaterial({ color: 0xf59e0b, roughness: 0.2, metalness: 0.1 });
-      onionCube = new THREE.Mesh(geo1, mat1);
-      onionCube.position.set(-2, 0.5, 0);
-      scene.add(onionCube);
-
-      const geo2 = new THREE.BoxGeometry(1.2, 2.5, 1.2);
-      const mat2 = new THREE.MeshStandardMaterial({ color: 0x8b5cf6, roughness: 0.2, metalness: 0.1 });
-      fashionCube = new THREE.Mesh(geo2, mat2);
-      fashionCube.position.set(2, 0.75, 0);
-      scene.add(fashionCube);
-
-      animate();
-    }
-
-    function animate() {
-      requestAnimationFrame(animate);
-      if (onionCube) onionCube.rotation.y += 0.005;
-      if (fashionCube) fashionCube.rotation.y += 0.005;
-
-      const time = Date.now() * 0.0003;
-      camera.position.x = Math.sin(time) * 7 + 1;
-      camera.lookAt(0, 0, 0);
-
-      renderer.render(scene, camera);
-    }
-
-    function select3DObject(type) {
-      currentSelection = type;
-      const lang = document.getElementById('globalLang').value;
-
-      if (type === 'onion') {
-        onionCube.material.color.setHex(0xffffff);
-        fashionCube.material.color.setHex(0x8b5cf6);
-      } else {
-        fashionCube.material.color.setHex(0xffffff);
-        onionCube.material.color.setHex(0xf59e0b);
-      }
-      updateUI(type, lang);
-    }
-
-    function changeTutorLang() {
-      if (currentSelection) {
-        const lang = document.getElementById('globalLang').value;
-        updateUI(currentSelection, lang);
-      }
-    }
-
-    function updateUI(type, lang) {
-      const data = database[type];
-      const langData = data[lang];
-
-      document.getElementById('currentLocation').innerText = data.location;
-      document.getElementById('tutorSpeech').innerText = langData.speech;
-      document.getElementById('hintTrans').innerText = langData.trans;
-      document.getElementById('hintPron').innerText = langData.pron;
-
-      document.getElementById('hintPanel').classList.remove('hidden');
-      document.getElementById('extraActions').classList.remove('hidden');
-      document.getElementById('logCounter').innerText = "1 Context Log Saved";
-    }
-
-    window.onload = function() {
-      init3D();
-    };
-  </script>
+        function sendMsg(userText) {
+            const chatBox = document.getElementById('chat-box');
+            chatBox.innerHTML += `<div class="msg msg-user">${userText}</div>`;
+            
+            setTimeout(() => {
+                chatBox.innerHTML += `
+                    <div class="msg msg-ai">
+                        네, 알겠습니다! 바로 주문 도와드릴게요. 😊
+                        <span>Sure thing! I'll process your request right away.</span>
+                    </div>
+                `;
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 500);
+        }
+    </script>
 </body>
 </html>
