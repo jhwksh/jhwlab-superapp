@@ -8,25 +8,21 @@
     <style>
         @import url('https://googleapis.com');
         body { font-family: 'Pretendard', sans-serif; background-color: #0b111e; color: #f3f4f6; }
-        /* 3D 가상 도시 공간을 구현하기 위한 회전/입체 효과 원근법 설정 */
         .perspective-container { perspective: 1000px; }
         .isometric-map { transform: rotateX(55deg) rotateZ(-45deg); transform-style: preserve-3d; }
-        .3d-building { transform: rotateZ(45deg) rotateX(-55deg) translateY(-20px); transform-style: preserve-3d; transition: all 0.3s ease; }
-        .3d-building:hover { transform: rotateZ(45deg) rotateX(-55deg) translateY(-35px) scale(1.05); }
+        .town-building { transform: rotateZ(45deg) rotateX(-55deg) translateY(-20px); transform-style: preserve-3d; transition: all 0.3s ease; }
+        .town-building:hover { transform: rotateZ(45deg) rotateX(-55deg) translateY(-35px) scale(1.05); }
     </style>
 </head>
 <body class="flex justify-center items-center min-h-screen p-4">
 
-    <!-- 스마트폰 프레임 -->
     <div class="w-full max-w-md bg-[#0f172a] rounded-[40px] shadow-2xl border-8 border-[#334155] overflow-hidden flex flex-col h-[840px] relative">
         
-        <!-- 상단 컨트롤 타워 -->
         <div class="bg-[#1e293b] p-4 pt-6 border-b border-[#334155] flex justify-between items-center z-10">
             <div>
                 <span class="text-[10px] font-bold text-indigo-400 tracking-wider block uppercase">JHW LAB META-TOWN</span>
-                <h1 class="text-base font-black text-white">성수동 가상 가계 거리 (3D)</h1>
+                <h1 class="text-base font-black text-white">성수동 가상 거리 (3D)</h1>
             </div>
-            <!-- 다국어 튜터 매칭 시스템 -->
             <select id="globalLang" onchange="changeTutorLang()" class="bg-[#334155] text-xs text-white rounded-lg px-2 py-1 outline-none cursor-pointer border-none">
                 <option value="en">🇺🇸 English Tutor</option>
                 <option value="zh">🇨🇳 中文 导师</option>
@@ -34,34 +30,25 @@
             </select>
         </div>
 
-        <!-- 메인 콘텐츠 영역 -->
         <div class="flex-1 flex flex-col overflow-hidden relative">
-            
-            <!-- [구역 1] 3D 가상 상권 메타버스 맵 공간 (화면의 절반 차지) -->
             <div class="h-[45%] relative bg-[#111827] overflow-hidden border-b border-[#334155] flex justify-center items-center perspective-container">
-                <!-- 격자 무늬 가상 미래 가상 도시 바닥 -->
                 <div class="absolute w-[500px] h-[500px] isometric-map bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:16px_16px] border border-indigo-900/40 rounded-full flex justify-center items-center">
                     
-                    <!-- 3D 가상 매장 1: 어니언 성수 카페 -->
-                    <div onclick="clickBuilding('onion')" class="absolute top-24 left-24 w-16 h-16 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl shadow-lg cursor-pointer flex flex-col justify-center items-center text-white 3d-building">
+                    <div onclick="clickBuilding('onion')" class="absolute top-24 left-24 w-16 h-16 bg-gradient-to-br from-amber-500 to-orange-600 rounded-xl shadow-lg cursor-pointer flex flex-col justify-center items-center text-white town-building">
                         <span class="text-xl">☕</span>
                         <span class="text-[9px] font-black mt-1 bg-black/40 px-1 rounded">어니언 성수</span>
                     </div>
 
-                    <!-- 3D 가상 매장 2: 성수 패션 편집숍 -->
-                    <div onclick="clickBuilding('fashion')" class="absolute bottom-24 right-24 w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl shadow-lg cursor-pointer flex flex-col justify-center items-center text-white 3d-building">
+                    <div onclick="clickBuilding('fashion')" class="absolute bottom-24 right-24 w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl shadow-lg cursor-pointer flex flex-col justify-center items-center text-white town-building">
                         <span class="text-xl">🛍️</span>
                         <span class="text-[9px] font-black mt-1 bg-black/40 px-1 rounded">성수 패션</span>
                     </div>
 
-                    <!-- 가상 도로 연출 라인 -->
                     <div class="absolute w-full h-1 bg-indigo-500/20 rotate-45"></div>
                 </div>
-                <!-- 안내 가이드 자막 -->
-                <span class="absolute bottom-2 left-3 text-[10px] text-gray-500 bg-black/60 px-2 py-0.5 rounded-full">💡 가상 도시의 3D 건물을 클릭해 보세요!</span>
+                <span class="absolute bottom-2 left-3 text-[10px] text-gray-500 bg-black/60 px-2 py-0.5 rounded-full">💡 가상 도시의 건물을 클릭해 보세요!</span>
             </div>
 
-            <!-- [구역 2] 따라붙는 생성형 AI 다국어 튜터 대화창 -->
             <div class="h-[55%] flex flex-col bg-[#111827] p-4 space-y-3 overflow-y-auto">
                 <div class="flex items-center space-x-2 border-b border-[#1e293b] pb-2">
                     <div class="w-8 h-8 rounded-full bg-gradient-to-r from-indigo-500 to-emerald-500 flex justify-center items-center font-bold text-white text-xs">AI</div>
@@ -71,19 +58,16 @@
                     </div>
                 </div>
 
-                <!-- 튜터 대화 및 가이드 내용 변경 레이어 -->
                 <div class="bg-[#1e293b] rounded-2xl p-3 border border-indigo-500/30">
                     <p class="text-xs text-indigo-300 font-bold mb-1" id="currentLocation">📍 매장을 선택하기 전입니다.</p>
-                    <p class="text-sm font-semibold text-white mb-2" id="tutorSpeech">"안녕하세요! 가상 성수동 거리에 오신 것을 환영합니다. 탐험하고 싶은 3D 건물을 마우스로 클릭해 보세요!"</p>
+                    <p class="text-sm font-semibold text-white mb-2" id="tutorSpeech">"안녕하세요! 가상 성수동 거리에 오신 것을 환영합니다. 탐험하고 싶은 건물을 클릭해 보세요!"</p>
                     
-                    <!-- 정교한 다국어 세포 단위 해설 패널 -->
                     <div id="hintPanel" class="hidden bg-[#0f172a] p-2 rounded-lg space-y-1 text-xs border border-gray-800">
                         <p class="text-amber-400 font-medium" id="hintTrans">💡 Translation will appear here.</p>
                         <p class="text-gray-400" id="hintPron">🔊 Pronunciation Guide.</p>
                     </div>
                 </div>
 
-                <!-- 융합 섹터 확장 버튼 영역 (커머스/관광 연동 증명) -->
                 <div id="extraActions" class="hidden space-y-2">
                     <div class="bg-gradient-to-r from-emerald-950 to-[#111827] p-2 rounded-xl border border-emerald-500/20 flex justify-between items-center">
                         <span class="text-[11px] text-gray-300">🛍️ 매장 실제 상품 입국 전 선결제</span>
@@ -95,10 +79,8 @@
                     </div>
                 </div>
             </div>
-
         </div>
 
-        <!-- 하단: 데이터 기반 자동 생성 오답 교재 저장고 -->
         <div class="bg-[#1e293b] border-t border-[#334155] p-3 flex justify-between items-center px-5 z-10">
             <div class="flex flex-col">
                 <span class="text-[9px] text-gray-400 font-bold uppercase">Dynamic Custom Textbook</span>
@@ -111,7 +93,6 @@
 
     </div>
 
-    <!-- 다국어 3D 공간 상호작용 구동 엔진 스크립트 -->
     <script>
         let currentBuilding = '';
         
@@ -126,7 +107,7 @@
                 location: "📍 Location: 성수 로컬 편집숍 (Fashion Shop)",
                 en: { speech: '"이거 다른 사이즈도 있어요?"', trans: "💡 Meaning: Do you have this in another size?", pron: "🔊 Pronunciation: I-geo da-reun sa-i-zeu-do it-seo-yo?" },
                 zh: { speech: '"이거 다른 사이즈도 있어요?"', trans: "💡 含义: 这个 Code 有其他的尺码吗？", pron: "🔊 发音: I-geo da-reun sa-i-zeu-do it-seo-yo?" },
-                ja: { speech: '"이거 다른 사이즈도 있어요?"', trans: "💡 意味: これ、他のサイズもありますか？", pron: "🔊 発音: I-geo da-reun sa-i-zeu-do it-seo-yo?" }
+                ja: { speech: '"이거 다른 사이즈도 있어요?"', trans: "💡 意味: これ、다른 사이즈도 있어요? (다른 사이즈도 있습니까?)", pron: "🔊 発音: I-geo da-reun sa-i-zeu-do it-seo-yo?" }
             }
         };
 
@@ -134,8 +115,6 @@
             currentBuilding = type;
             const lang = document.getElementById('globalLang').value;
             updateUI(type, lang);
-            
-            // 융합 섹션 및 힌트 오픈 연출
             document.getElementById('hintPanel').classList.remove('hidden');
             document.getElementById('extraActions').classList.remove('hidden');
             document.getElementById('logCounter').innerText = "1 Live Log Connected!";
@@ -146,10 +125,7 @@
             const lang = document.getElementById('globalLang').value;
             const tutorNames = { en: "AI Tutor Minu (English Guide)", zh: "AI 导师 敏우 (Chinese Guide)", ja: "AI 講師 ミヌ (Japanese Guide)" };
             document.getElementById('tutorName').innerText = tutorNames[lang];
-            
-            if (currentBuilding) {
-                updateUI(currentBuilding, lang);
-            }
+            if (currentBuilding) { updateUI(currentBuilding, lang); }
         }
 
         function updateUI(building, lang) {
@@ -158,3 +134,6 @@
             document.getElementById('hintTrans').innerText = database[building][lang].trans;
             document.getElementById('hintPron').innerText = database[building][lang].pron;
         }
+    </script>
+</body>
+</html>
