@@ -1,152 +1,94 @@
+<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Virtual Seongsu-dong Korean Tour - JHW LAB</title>
-    <!-- 테일윈드 CSS 표준 가동 -->
-    <script src="https://jsdelivr.net"></script>
-    <style>
-        @import url('https://googleapis.com');
-        body { font-family: 'Pretendard', sans-serif; background-color: #f7f4eb; color: #374151; }
-        /* 이미지와 똑같은 아늑한 상아색 배경 톤 및 부드러운 스크롤 */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; rounded: 3px; }
-    </style>
+    <title>Korean Learning Metaverse</title>
+    <!-- Tailwind CSS (스타일링 용도) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome (아이콘 용도) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="flex justify-center items-center min-h-screen p-6">
+<body class="bg-gray-200 flex justify-center items-center min-h-screen p-4 font-sans">
+    
+    <!-- 모바일/태블릿 화면 비율의 메인 컨테이너 -->
+    <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden flex flex-col h-[850px]">
 
-    <!-- 통합 플랫폼 대시보드 컨테이너 -->
-    <div class="w-full max-w-6xl bg-white rounded-[32px] shadow-xl border border-gray-200/60 overflow-hidden flex flex-col md:flex-row h-[780px]">
-        
-        <!-- ================= [왼쪽 구역: 3D 메타버스 가상 상권 지도] ================= -->
-        <div class="w-full md:w-[60%] p-6 flex flex-col justify-between relative bg-[#fcfbfa] border-r border-gray-100">
-            
-            <!-- 타이틀 헤더 라인 -->
-            <div class="flex justify-between items-start">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-full bg-[#e15b39] flex justify-center items-center text-white shadow-md">
-                        <span class="text-lg">🌐</span>
-                    </div>
-                    <div>
-                        <span class="text-[10px] font-bold text-[#e15b39] tracking-wider block uppercase">KOREAN LEARNING METAVERSE</span>
-                        <h1 class="text-2xl font-black text-[#1e293b] tracking-tight">Virtual Seongsu-dong Korean Tour</h1>
-                        <p class="text-xs text-gray-400 mt-0.5">가상 성수동 한국어 투어</p>
-                    </div>
+        <!-- 상단 헤더 영역 -->
+        <div class="p-6 bg-white border-b border-gray-100">
+            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Korean Learning Metaverse</p>
+            <h1 class="text-3xl font-extrabold text-gray-900 leading-tight">Virtual Seongsu-dong<br>Korean Tour</h1>
+            <p class="text-sm text-gray-500 mt-1">가상 성수동 한국어 투어</p>
+            <p class="text-sm text-emerald-500 font-semibold mt-3 flex items-center">
+                <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full mr-2 animate-pulse"></span>3 shops online now
+            </p>
+        </div>
+
+        <!-- 가상 맵 및 상점 선택 영역 -->
+        <div class="relative bg-[#f8f5ee] h-56 w-full flex items-center justify-center border-b border-gray-200">
+            <!-- 배경 패턴이나 이미지가 들어갈 자리 (현재는 텍스트로 대체) -->
+            <div class="text-center z-10">
+                <p class="text-gray-600 font-medium text-sm mb-4">📍 Seongsu-dong · 성수동</p>
+                <div class="flex flex-col space-y-3 items-center">
+                    <span class="bg-white px-4 py-2 rounded-full text-sm font-medium shadow-sm cursor-pointer hover:bg-gray-50 transition">☕ 성수 카페 Seongsu Cafe</span>
+                    <span class="bg-blue-50 px-4 py-2 rounded-full text-sm font-bold shadow-sm border-2 border-blue-200 text-blue-700 cursor-pointer">🍲 서울 맛집 Seoul Restaurant</span>
+                    <span class="bg-white px-4 py-2 rounded-full text-sm font-medium shadow-sm cursor-pointer hover:bg-gray-50 transition">🛍️ 한국 상점 K-Shop</span>
                 </div>
-                <!-- 접속 상태 바 -->
-                <div class="bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full text-xs font-bold border border-emerald-200 flex items-center space-x-1.5">
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span>3 shops online now</span>
-                </div>
-            </div>
-
-            <!-- 성수동 3D 미니어처 마을 그래픽 센터 (보내주신 감성 일러스트 구역 연출) -->
-            <div class="flex-1 my-4 bg-gradient-to-br from-[#f1ede2] to-[#e5dec9] rounded-2xl relative overflow-hidden border border-gray-300/40 shadow-inner flex justify-center items-center">
-                
-                <!-- 아기자기한 격자 및 도로 배경 레이아웃 (일러스트 대용 장치) -->
-                <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#78350f_1px,transparent_1px)] [background-size:20px_20px]"></div>
-                <div class="absolute w-[120%] h-12 bg-white/40 rotate-12 transform -translate-y-12"></div>
-                <div class="absolute w-[120%] h-16 bg-white/30 -rotate-35 transform translate-y-16"></div>
-
-                <!-- 📍 건물 랜드마크 1: 성수 카페 -->
-                <div onclick="clickShop('cafe')" id="btn-cafe" class="absolute top-1/3 left-14 bg-white/90 hover:bg-white text-gray-800 px-4 py-2.5 rounded-2xl shadow-lg border border-gray-200/80 cursor-pointer flex items-center space-x-2 transition-all hover:-translate-y-1">
-                    <span class="p-1.5 bg-amber-100 rounded-xl text-lg shadow-inner">☕</span>
-                    <div class="text-left">
-                        <h4 class="text-xs font-black text-gray-900">성수 카페</h4>
-                        <p class="text-[9px] text-gray-400 font-medium">Seongsu Cafe</p>
-                    </div>
-                </div>
-
-                <!-- 📍 건물 랜드마크 2: 서울 맛집 (보내주신 이미지의 활성화 상태 연출) -->
-                <div onclick="clickShop('restaurant')" id="btn-restaurant" class="absolute top-1/4 right-20 bg-[#e15b39] hover:bg-[#cf4e2d] text-white px-5 py-3 rounded-2xl shadow-xl cursor-pointer flex items-center space-x-3 transition-all transform scale-105 border-2 border-white animate-bounce-short">
-                    <span class="p-2 bg-white/20 rounded-xl text-xl">🍚</span>
-                    <div class="text-left">
-                        <h4 class="text-xs font-black">서울 맛집</h4>
-                        <p class="text-[9px] text-white/80 font-medium">Seoul Restaurant</p>
-                    </div>
-                    <!-- 조준 타겟 미니 링 -->
-                    <div class="absolute -bottom-6 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-[#e15b39] rounded-full border-2 border-white shadow flex justify-center items-center">
-                        <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
-                    </div>
-                </div>
-
-                <!-- 📍 건물 랜드마크 3: 한국 상점 -->
-                <div onclick="clickShop('shop')" id="btn-shop" class="absolute bottom-1/4 left-1/3 bg-white/90 hover:bg-white text-gray-800 px-4 py-2.5 rounded-2xl shadow-lg border border-gray-200/80 cursor-pointer flex items-center space-x-2 transition-all hover:-translate-y-1">
-                    <span class="p-1.5 bg-purple-100 rounded-xl text-lg shadow-inner">🛍️</span>
-                    <div class="text-left">
-                        <h4 class="text-xs font-black text-gray-900">한국 상점</h4>
-                        <p class="text-[9px] text-gray-400 font-medium">K-Shop</p>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- 하단 터치 가이드 블랙 배너 -->
-            <div class="bg-[#241d1a] text-stone-300 py-3 px-6 rounded-xl text-center text-xs font-medium shadow-md flex justify-center items-center space-x-1.5">
-                <span>Tap a storefront sign to start a Korean conversation</span>
-                <span class="text-amber-400">✨</span>
             </div>
         </div>
 
-        <!-- ================= [오른쪽 구역: 실시간 생성형 다국어 AI 튜터창] ================= -->
-        <div class="w-full md:w-[40%] bg-[#faf9f6] p-6 flex flex-col justify-between border-t md:border-t-0 md:border-l border-gray-200/60">
-            
-            <!-- 튜터 프로필 카드 영역 -->
-            <div class="flex items-center justify-between border-b border-gray-200/60 pb-4">
-                <div class="flex items-center space-x-3">
-                    <!-- 아기자기한 캐릭터 아바타 프레임 -->
-                    <div class="w-11 h-11 rounded-full bg-amber-100 border border-amber-300 flex justify-center items-center font-bold text-gray-700 text-sm shadow-inner relative">
-                        👸
-                        <span class="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-500 border-2 border-white"></span>
-                    </div>
-                    <div>
-                        <div class="flex items-center space-x-1.5">
-                            <h3 class="text-sm font-black text-gray-900" id="tutorTitle">미나 · AI Korean Tutor</h3>
-                        </div>
-                        <p class="text-[11px] text-[#e15b39] font-bold flex items-center" id="targetShopName">
-                            <span>📍 서울 맛집 · Seoul Restaurant</span>
-                        </p>
-                    </div>
-                </div>
-                <button class="text-gray-400 hover:text-gray-600 text-sm font-bold">✕</button>
+        <!-- 채팅 영역 -->
+        <div class="flex-1 overflow-y-auto p-5 bg-gray-50 flex flex-col">
+            <div class="text-center text-xs font-medium text-gray-400 my-4 bg-gray-200/50 py-2 rounded-full mx-auto px-4">
+                Tap a storefront sign to start a Korean conversation ✨
             </div>
 
-            <!-- 실시간 대화창 기록 구역 -->
-            <div class="flex-1 my-4 overflow-y-auto space-y-4 pr-1">
-                
-                <!-- 튜터의 상냥한 한국어 + 영어 번역 말풍선 레이어 -->
-                <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 space-y-2.5 max-w-[90%]">
-                    <p class="text-sm font-bold text-gray-900 leading-relaxed" id="bubbleKorean">
-                        어서 오세요! '서울 맛집'입니다. 오늘은 어떤 음식을 드시고 싶으세요?
-                    </p>
-                    <div class="border-t border-gray-100 pt-2">
-                        <p class="text-xs text-stone-500 italic font-medium leading-normal" id="bubbleEnglish">
-                            Welcome! This is 'Seoul Restaurant'. What kind of food would you like to eat today?
-                        </p>
+            <!-- AI 튜터 메시지 -->
+            <div class="flex items-start mt-4">
+                <!-- 아바타 -->
+                <div class="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center mr-3 flex-shrink-0 border border-orange-200">
+                    <img src="https://api.dicebear.com/7.x/notionists/svg?seed=Mina" alt="미나 아바타" class="w-10 h-10 rounded-full">
+                </div>
+                <div>
+                    <div class="flex items-center mb-1">
+                        <span class="font-bold text-sm text-gray-900 mr-2">미나 · AI Korean Tutor</span>
+                    </div>
+                    <div class="text-xs font-medium text-gray-500 mb-2 flex items-center">
+                        🍲 서울 맛집 · Seoul Restaurant
+                    </div>
+                    <!-- 말풍선 -->
+                    <div class="bg-white p-4 rounded-2xl rounded-tl-none shadow-sm border border-gray-100 max-w-[95%]">
+                        <p class="text-gray-800 text-sm font-medium mb-3 leading-relaxed">어서 오세요! '서울 맛집'입니다. 오늘은 어떤 음식을 드시고 싶으세요?</p>
+                        <p class="text-gray-400 text-xs italic leading-relaxed">Welcome! This is 'Seoul Restaurant'. What kind of food would you like to eat today?</p>
                     </div>
                 </div>
-
             </div>
-
-            <!-- 원클릭 추천 답변 단추 박스 (인터랙션 핵심) -->
-            <div class="space-y-4">
-                <div class="flex flex-wrap gap-2" id="chipContainer">
-                    <button onclick="typeAnswer('비비밥 하나 주세요')" class="bg-white hover:bg-amber-50 text-xs text-gray-700 font-bold px-3.5 py-2 rounded-xl border border-gray-200 shadow-sm transition-all">비빔밥 하나 주세요</button>
-                    <button onclick="typeAnswer('매운 음식 있어요?')" class="bg-white hover:bg-amber-50 text-xs text-gray-700 font-bold px-3.5 py-2 rounded-xl border border-gray-200 shadow-sm transition-all">매운 음식 있어요?</button>
-                    <button onclick="typeAnswer('자리 있어요?')" class="bg-white hover:bg-amber-50 text-xs text-gray-700 font-bold px-3.5 py-2 rounded-xl border border-gray-200 shadow-sm transition-all">자리 있어요?</button>
-                </div>
-
-                <!-- 한국어 타이핑 및 전송 바 -->
-                <div class="relative flex items-center">
-                    <input type="text" id="chatInput" placeholder="한국어로 답해 보세요..." class="w-full bg-[#f1ede4] placeholder-gray-400 text-xs font-bold text-gray-800 rounded-xl pl-4 pr-12 py-3.5 border-none outline-none focus:ring-2 focus:ring-amber-400/50 shadow-inner">
-                    <button onclick="sendMessage()" class="absolute right-2 p-2 bg-[#e15b39] hover:bg-[#cf4e2d] text-white rounded-lg shadow transition-all">
-                        <svg xmlns="http://w3.org" class="h-4 w-4 transform rotate-45" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
-
         </div>
 
+        <!-- 하단 입력 및 추천 버튼 영역 -->
+        <div class="p-4 bg-white border-t border-gray-100">
+            <!-- 추천 답변 (칩 형태) -->
+            <div class="flex flex-wrap gap-2 mb-4">
+                <button class="bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 px-4 py-2 rounded-2xl text-sm font-medium transition-colors shadow-sm">
+                    비빔밥 하나 주세요
+                </button>
+                <button class="bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 px-4 py-2 rounded-2xl text-sm font-medium transition-colors shadow-sm">
+                    매운 음식 있어요?
+                </button>
+                <button class="bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 px-4 py-2 rounded-2xl text-sm font-medium transition-colors shadow-sm">
+                    자리 있어요?
+                </button>
+            </div>
+            
+            <!-- 입력창 -->
+            <div class="relative flex items-center">
+                <input type="text" placeholder="한국어로 답해 보세요..." class="w-full bg-gray-100 border-transparent rounded-full py-4 px-6 pr-14 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all text-sm font-medium placeholder-gray-400">
+                <button class="absolute right-2 w-10 h-10 bg-black text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors">
+                    <i class="fa-solid fa-arrow-up"></i>
+                </button>
+            </div>
+        </div>
     </div>
+
+</body>
+</html>
