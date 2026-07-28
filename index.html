@@ -1,189 +1,152 @@
-<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>K-Language Meta Village (성수동 메타동네)</title>
+    <title>Virtual Seongsu-dong Korean Tour - JHW LAB</title>
+    <!-- 테일윈드 CSS 표준 가동 -->
+    <script src="https://jsdelivr.net"></script>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { display: flex; height: 100vh; background: #f4f6f8; overflow: hidden; }
-        
-        /* 1. 좌측/상단: 글로벌 언어 선택 바 */
-        .top-bar { position: absolute; top: 16px; left: 20px; z-index: 10; background: rgba(255, 255, 255, 0.95); padding: 8px 16px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 8px; }
-        .lang-select { border: none; font-size: 14px; font-weight: bold; background: transparent; cursor: pointer; outline: none; }
-
-        /* 2. 중앙: 성수동 일러스트 지도 */
-        .map-section { flex: 1; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #e5ecef; }
-        .map-container { position: relative; width: 90%; max-width: 680px; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.12); }
-        .map-img { width: 100%; display: block; }
-
-        /* 지도 위 상점 핀 */
-        .shop-pin { position: absolute; padding: 10px 16px; background: #ffffff; border-radius: 24px; font-weight: bold; font-size: 13px; box-shadow: 0 4px 15px rgba(0,0,0,0.18); cursor: pointer; border: 2px solid #ff6b6b; transition: all 0.2s ease; display: flex; align-items: center; gap: 6px; }
-        .shop-pin:hover { transform: translateY(-3px) scale(1.05); background: #fff5f5; border-color: #ee5253; }
-        
-        .pin-cafe { top: 48%; left: 32%; }
-        .pin-food { top: 28%; left: 52%; }
-        .pin-shop { top: 68%; left: 48%; }
-
-        /* 3. 우측: AI 대화 & 다국어 튜터 */
-        .chat-section { width: 380px; background: #ffffff; border-left: 1px solid #e1e4e8; display: flex; flex-direction: column; padding: 20px; }
-        .tutor-header { display: flex; align-items: center; gap: 12px; padding-bottom: 15px; border-bottom: 1px solid #f0f0f0; margin-bottom: 15px; }
-        .tutor-avatar { width: 44px; height: 44px; border-radius: 50%; background: #ffeaa7; display: flex; align-items: center; justify-content: center; font-size: 22px; }
-        
-        .chat-history { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px; padding-right: 4px; }
-        .msg { padding: 10px 14px; border-radius: 12px; font-size: 13px; line-height: 1.5; max-width: 88%; }
-        .msg-ai { background: #f0f4ff; color: #1e293b; align-self: flex-start; }
-        .msg-ai span { display: block; font-size: 11px; color: #64748b; margin-top: 4px; border-top: 1px dashed #cbd5e1; padding-top: 4px; }
-        .msg-user { background: #4f46e5; color: #ffffff; align-self: flex-end; }
-
-        .quick-replies { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
-        .chip { padding: 8px 12px; background: #f1f5f9; border-radius: 18px; font-size: 12px; cursor: pointer; border: 1px solid #e2e8f0; font-weight: 500; transition: 0.2s; }
-        .chip:hover { background: #e2e8f0; }
-
-        /* 비즈니스 모델: 오답 교재 자동 생성 */
-        .textbook-card { background: #fff8f0; border: 1px solid #fed7aa; border-radius: 10px; padding: 12px; margin-top: 8px; font-size: 12px; }
-        .pay-btn { margin-top: auto; padding: 14px; background: #10b981; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; text-align: center; font-size: 14px; transition: 0.2s; }
-        .pay-btn:hover { background: #059669; }
+        @import url('https://googleapis.com');
+        body { font-family: 'Pretendard', sans-serif; background-color: #f7f4eb; color: #374151; }
+        /* 이미지와 똑같은 아늑한 상아색 배경 톤 및 부드러운 스크롤 */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; rounded: 3px; }
     </style>
 </head>
-<body>
+<body class="flex justify-center items-center min-h-screen p-6">
 
-    <!-- 글로벌 다국어 선택 -->
-    <div class="top-bar">
-        <span>🌐 Global Native Language:</span>
-        <select class="lang-select" id="user-lang" onchange="changeLanguage()">
-            <option value="en">🇺🇸 English</option>
-            <option value="zh">🇨🇳 中文 (Chinese)</option>
-            <option value="ja">🇯🇵 日本語 (Japanese)</option>
-            <option value="es">🇪🇸 Español (Spanish)</option>
-            <option value="vi">🇻🇳 Tiếng Việt (Vietnamese)</option>
-            <option value="th">🇹🇭 ภาษาไทย (Thai)</option>
-        </select>
-    </div>
-
-    <!-- 중앙: 성수동 메타동네 지도 -->
-    <div class="map-section">
-        <div class="map-container">
-            <!-- 지도 이미지 -->
-            <img src="https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?w=800" class="map-img" alt="성수동 메타동네">
+    <!-- 통합 플랫폼 대시보드 컨테이너 -->
+    <div class="w-full max-w-6xl bg-white rounded-[32px] shadow-xl border border-gray-200/60 overflow-hidden flex flex-col md:flex-row h-[780px]">
+        
+        <!-- ================= [왼쪽 구역: 3D 메타버스 가상 상권 지도] ================= -->
+        <div class="w-full md:w-[60%] p-6 flex flex-col justify-between relative bg-[#fcfbfa] border-r border-gray-100">
             
-            <button class="shop-pin pin-cafe" onclick="selectShop('cafe')">☕ 성수 카페 <span>Seongsu Cafe</span></button>
-            <button class="shop-pin pin-food" onclick="selectShop('food')">🍲 서울 맛집 <span>Seoul Restaurant</span></button>
-            <button class="shop-pin pin-shop" onclick="selectShop('shop')">🛍️ 한국 상점 <span>K-Shop</span></button>
-        </div>
-    </div>
+            <!-- 타이틀 헤더 라인 -->
+            <div class="flex justify-between items-start">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-full bg-[#e15b39] flex justify-center items-center text-white shadow-md">
+                        <span class="text-lg">🌐</span>
+                    </div>
+                    <div>
+                        <span class="text-[10px] font-bold text-[#e15b39] tracking-wider block uppercase">KOREAN LEARNING METAVERSE</span>
+                        <h1 class="text-2xl font-black text-[#1e293b] tracking-tight">Virtual Seongsu-dong Korean Tour</h1>
+                        <p class="text-xs text-gray-400 mt-0.5">가상 성수동 한국어 투어</p>
+                    </div>
+                </div>
+                <!-- 접속 상태 바 -->
+                <div class="bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full text-xs font-bold border border-emerald-200 flex items-center space-x-1.5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>3 shops online now</span>
+                </div>
+            </div>
 
-    <!-- 우측: AI 한국어 튜터 & 다국어 지원 -->
-    <div class="chat-section">
-        <div class="tutor-header">
-            <div class="tutor-avatar">👩‍🏫</div>
-            <div>
-                <h3 id="tutor-name">미나 (AI Korean Tutor)</h3>
-                <p id="shop-status" style="font-size: 12px; color: #64748b;">지도의 상점을 선택해 주세요</p>
+            <!-- 성수동 3D 미니어처 마을 그래픽 센터 (보내주신 감성 일러스트 구역 연출) -->
+            <div class="flex-1 my-4 bg-gradient-to-br from-[#f1ede2] to-[#e5dec9] rounded-2xl relative overflow-hidden border border-gray-300/40 shadow-inner flex justify-center items-center">
+                
+                <!-- 아기자기한 격자 및 도로 배경 레이아웃 (일러스트 대용 장치) -->
+                <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#78350f_1px,transparent_1px)] [background-size:20px_20px]"></div>
+                <div class="absolute w-[120%] h-12 bg-white/40 rotate-12 transform -translate-y-12"></div>
+                <div class="absolute w-[120%] h-16 bg-white/30 -rotate-35 transform translate-y-16"></div>
+
+                <!-- 📍 건물 랜드마크 1: 성수 카페 -->
+                <div onclick="clickShop('cafe')" id="btn-cafe" class="absolute top-1/3 left-14 bg-white/90 hover:bg-white text-gray-800 px-4 py-2.5 rounded-2xl shadow-lg border border-gray-200/80 cursor-pointer flex items-center space-x-2 transition-all hover:-translate-y-1">
+                    <span class="p-1.5 bg-amber-100 rounded-xl text-lg shadow-inner">☕</span>
+                    <div class="text-left">
+                        <h4 class="text-xs font-black text-gray-900">성수 카페</h4>
+                        <p class="text-[9px] text-gray-400 font-medium">Seongsu Cafe</p>
+                    </div>
+                </div>
+
+                <!-- 📍 건물 랜드마크 2: 서울 맛집 (보내주신 이미지의 활성화 상태 연출) -->
+                <div onclick="clickShop('restaurant')" id="btn-restaurant" class="absolute top-1/4 right-20 bg-[#e15b39] hover:bg-[#cf4e2d] text-white px-5 py-3 rounded-2xl shadow-xl cursor-pointer flex items-center space-x-3 transition-all transform scale-105 border-2 border-white animate-bounce-short">
+                    <span class="p-2 bg-white/20 rounded-xl text-xl">🍚</span>
+                    <div class="text-left">
+                        <h4 class="text-xs font-black">서울 맛집</h4>
+                        <p class="text-[9px] text-white/80 font-medium">Seoul Restaurant</p>
+                    </div>
+                    <!-- 조준 타겟 미니 링 -->
+                    <div class="absolute -bottom-6 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-[#e15b39] rounded-full border-2 border-white shadow flex justify-center items-center">
+                        <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
+                    </div>
+                </div>
+
+                <!-- 📍 건물 랜드마크 3: 한국 상점 -->
+                <div onclick="clickShop('shop')" id="btn-shop" class="absolute bottom-1/4 left-1/3 bg-white/90 hover:bg-white text-gray-800 px-4 py-2.5 rounded-2xl shadow-lg border border-gray-200/80 cursor-pointer flex items-center space-x-2 transition-all hover:-translate-y-1">
+                    <span class="p-1.5 bg-purple-100 rounded-xl text-lg shadow-inner">🛍️</span>
+                    <div class="text-left">
+                        <h4 class="text-xs font-black text-gray-900">한국 상점</h4>
+                        <p class="text-[9px] text-gray-400 font-medium">K-Shop</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 하단 터치 가이드 블랙 배너 -->
+            <div class="bg-[#241d1a] text-stone-300 py-3 px-6 rounded-xl text-center text-xs font-medium shadow-md flex justify-center items-center space-x-1.5">
+                <span>Tap a storefront sign to start a Korean conversation</span>
+                <span class="text-amber-400">✨</span>
             </div>
         </div>
 
-        <!-- 실시간 대화창 -->
-        <div class="chat-history" id="chat-box">
-            <div class="msg msg-ai">
-                안녕하세요! 지도의 상점 핀을 클릭하시면 다국어 가이드와 함께 실전 한국어 대화가 시작됩니다.
-                <span id="welcome-sub">Click a shop pin to start practicing Korean with your native language guide!</span>
+        <!-- ================= [오른쪽 구역: 실시간 생성형 다국어 AI 튜터창] ================= -->
+        <div class="w-full md:w-[40%] bg-[#faf9f6] p-6 flex flex-col justify-between border-t md:border-t-0 md:border-l border-gray-200/60">
+            
+            <!-- 튜터 프로필 카드 영역 -->
+            <div class="flex items-center justify-between border-b border-gray-200/60 pb-4">
+                <div class="flex items-center space-x-3">
+                    <!-- 아기자기한 캐릭터 아바타 프레임 -->
+                    <div class="w-11 h-11 rounded-full bg-amber-100 border border-amber-300 flex justify-center items-center font-bold text-gray-700 text-sm shadow-inner relative">
+                        👸
+                        <span class="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-500 border-2 border-white"></span>
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-1.5">
+                            <h3 class="text-sm font-black text-gray-900" id="tutorTitle">미나 · AI Korean Tutor</h3>
+                        </div>
+                        <p class="text-[11px] text-[#e15b39] font-bold flex items-center" id="targetShopName">
+                            <span>📍 서울 맛집 · Seoul Restaurant</span>
+                        </p>
+                    </div>
+                </div>
+                <button class="text-gray-400 hover:text-gray-600 text-sm font-bold">✕</button>
             </div>
-        </div>
 
-        <!-- 추천 응답 옵션 -->
-        <div class="quick-replies" id="quick-buttons"></div>
-
-        <!-- 수익 모델: 나만의 오답 노트 교재 -->
-        <h4>📘 My Only Textbook (오답 교재)</h4>
-        <div class="textbook-card">
-            <strong>오답 자동 감지:</strong> "소금빵 주세요"
-            <div style="color: #d97706; margin-top: 4px;">➔ 교정: "소금빵 <u>한 개</u> 주세요" (수량 표현 추가)</div>
-        </div>
-
-        <button class="pay-btn" onclick="alert('사업계획서 PT용: 전 세계 결제 연동(Stripe/PayPal) 시뮬레이션입니다.')">
-            💳 맞춤 교재 생성 및 결제 (₩4,900)
-        </button>
-    </div>
-
-    <script>
-        // 전 세계 다국어 번역 힌트 데이터
-        const translations = {
-            en: { welcome: "Welcome! What kind of food would you like today?", cafe: "Welcome to Seongsu Cafe! What drink can I get you?", food: "Welcome to Seoul Restaurant!", sub: "English guide enabled" },
-            zh: { welcome: "欢迎！今天想吃点什么呢？", cafe: "欢迎光临圣水咖啡馆！需要什么饮料？", food: "欢迎光临首尔美食店！", sub: "中文 导师已激活" },
-            ja: { welcome: "いらっしゃいませ！今日は何を食べたいですか？", cafe: "圣水カフェへようこそ！お飲み物はいかがですか？", food: "ソウルグルメへようこそ！", sub: "日本語 ガイド有効" },
-            es: { welcome: "¡Bienvenido! ¿Qué te gustaría comer hoy?", cafe: "¡Bienvenido a Seongsu Cafe!", food: "¡Bienvenido a Seoul Restaurant!", sub: "Guía en español activada" },
-            vi: { welcome: "Chào mừng! Hôm nay bạn muốn ăn gì?", cafe: "Chào mừng đến với Seongsu Cafe!", food: "Chào mừng đến với Seoul Restaurant!", sub: "Hướng dẫn tiếng Việt" },
-            th: { welcome: "ยินดีต้อนรับ! วันนี้คุณอยากทานอะไรดีครับ?", cafe: "ยินดีต้อนรับสู่ Seongsu Cafe!", food: "ยินดีต้อนรับสู่ Seoul Restaurant!", sub: "เปิดใช้งานคำแนะนำภาษาไทย" }
-        };
-
-        let currentLang = 'en';
-
-        function changeLanguage() {
-            currentLang = document.getElementById('user-lang').value;
-            const subText = document.getElementById('welcome-sub');
-            if (subText) subText.innerText = translations[currentLang].sub;
-        }
-
-        function selectShop(type) {
-            const chatBox = document.getElementById('chat-box');
-            const quickButtons = document.getElementById('quick-buttons');
-            const shopStatus = document.getElementById('shop-status');
-
-            if (type === 'food') {
-                shopStatus.innerText = '🍲 서울 맛집 (Seoul Restaurant)';
-                chatBox.innerHTML = `
-                    <div class="msg msg-ai">
+            <!-- 실시간 대화창 기록 구역 -->
+            <div class="flex-1 my-4 overflow-y-auto space-y-4 pr-1">
+                
+                <!-- 튜터의 상냥한 한국어 + 영어 번역 말풍선 레이어 -->
+                <div class="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 space-y-2.5 max-w-[90%]">
+                    <p class="text-sm font-bold text-gray-900 leading-relaxed" id="bubbleKorean">
                         어서 오세요! '서울 맛집'입니다. 오늘은 어떤 음식을 드시고 싶으세요?
-                        <span>${translations[currentLang].welcome}</span>
+                    </p>
+                    <div class="border-t border-gray-100 pt-2">
+                        <p class="text-xs text-stone-500 italic font-medium leading-normal" id="bubbleEnglish">
+                            Welcome! This is 'Seoul Restaurant'. What kind of food would you like to eat today?
+                        </p>
                     </div>
-                `;
-                quickButtons.innerHTML = `
-                    <div class="chip" onclick="sendMsg('비빔밥 하나 주세요')">비빔밥 하나 주세요</div>
-                    <div class="chip" onclick="sendMsg('매운 음식 있어요?')">매운 음식 있어요?</div>
-                    <div class="chip" onclick="sendMsg('자리 있어요?')">자리 있어요?</div>
-                `;
-            } else if (type === 'cafe') {
-                shopStatus.innerText = '☕ 성수 카페 (Seongsu Cafe)';
-                chatBox.innerHTML = `
-                    <div class="msg msg-ai">
-                        어서 오세요! '성수 카페'입니다. 어떤 음료로 준비해 드릴까요?
-                        <span>${translations[currentLang].cafe}</span>
-                    </div>
-                `;
-                quickButtons.innerHTML = `
-                    <div class="chip" onclick="sendMsg('아이스 아메리카노 한 잔 주세요')">아메리카노 한 잔 주세요</div>
-                    <div class="chip" onclick="sendMsg('소금빵 얼마예요?')">소금빵 얼마예요?</div>
-                `;
-            } else {
-                shopStatus.innerText = '🛍️ 한국 상점 (K-Shop)';
-                chatBox.innerHTML = `
-                    <div class="msg msg-ai">
-                        반갑습니다! '한국 상점'입니다. 찾으시는 물건이 있으신가요?
-                        <span>Welcome to K-Shop! How can I help you?</span>
-                    </div>
-                `;
-                quickButtons.innerHTML = `
-                    <div class="chip" onclick="sendMsg('기념품 추천해 주세요')">기념품 추천해 주세요</div>
-                    <div class="chip" onclick="sendMsg('조금만 깎아주세요!')">조금만 깎아주세요!</div>
-                `;
-            }
-        }
+                </div>
 
-        function sendMsg(userText) {
-            const chatBox = document.getElementById('chat-box');
-            chatBox.innerHTML += `<div class="msg msg-user">${userText}</div>`;
-            
-            setTimeout(() => {
-                chatBox.innerHTML += `
-                    <div class="msg msg-ai">
-                        네, 알겠습니다! 바로 주문 도와드릴게요. 😊
-                        <span>Sure thing! I'll process your request right away.</span>
-                    </div>
-                `;
-                chatBox.scrollTop = chatBox.scrollHeight;
-            }, 500);
-        }
-    </script>
-</body>
-</html>
+            </div>
+
+            <!-- 원클릭 추천 답변 단추 박스 (인터랙션 핵심) -->
+            <div class="space-y-4">
+                <div class="flex flex-wrap gap-2" id="chipContainer">
+                    <button onclick="typeAnswer('비비밥 하나 주세요')" class="bg-white hover:bg-amber-50 text-xs text-gray-700 font-bold px-3.5 py-2 rounded-xl border border-gray-200 shadow-sm transition-all">비빔밥 하나 주세요</button>
+                    <button onclick="typeAnswer('매운 음식 있어요?')" class="bg-white hover:bg-amber-50 text-xs text-gray-700 font-bold px-3.5 py-2 rounded-xl border border-gray-200 shadow-sm transition-all">매운 음식 있어요?</button>
+                    <button onclick="typeAnswer('자리 있어요?')" class="bg-white hover:bg-amber-50 text-xs text-gray-700 font-bold px-3.5 py-2 rounded-xl border border-gray-200 shadow-sm transition-all">자리 있어요?</button>
+                </div>
+
+                <!-- 한국어 타이핑 및 전송 바 -->
+                <div class="relative flex items-center">
+                    <input type="text" id="chatInput" placeholder="한국어로 답해 보세요..." class="w-full bg-[#f1ede4] placeholder-gray-400 text-xs font-bold text-gray-800 rounded-xl pl-4 pr-12 py-3.5 border-none outline-none focus:ring-2 focus:ring-amber-400/50 shadow-inner">
+                    <button onclick="sendMessage()" class="absolute right-2 p-2 bg-[#e15b39] hover:bg-[#cf4e2d] text-white rounded-lg shadow transition-all">
+                        <svg xmlns="http://w3.org" class="h-4 w-4 transform rotate-45" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
